@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Notification;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS on production
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         View::composer('*', function ($view) {
 
             $setting = Setting::first();
@@ -40,8 +46,6 @@ class AppServiceProvider extends ServiceProvider
                 'unreadNotifications' => $unreadNotifications,
             ]);
         });
-
-
 
         Gate::define('manage-notifications', function ($user) {
             return $user->role === 'Admin';

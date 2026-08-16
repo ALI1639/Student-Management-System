@@ -24,6 +24,7 @@ class Attendance extends Model
     }
 
 
+
     protected $guarded = [];
 
     protected $casts = [

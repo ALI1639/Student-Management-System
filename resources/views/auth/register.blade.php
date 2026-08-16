@@ -223,6 +223,9 @@
 
                 <input type="password" id="password" name="password"
                     class="form-control @error('password') is-invalid @enderror" placeholder="Create password" required>
+                <span class="input-group-text" id="togglePassword" style="cursor:pointer;">
+                    <i class="fa fa-eye"></i>
+                </span>
 
             </div>
 
@@ -245,11 +248,14 @@
             <div class="input-group">
 
                 <span class="input-group-text">
-                    <i class="fa fa-lock"></i>
+                    <i class="fa fa-check"></i>
                 </span>
 
-                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"
+                <input type="password" id="confirmPassword" name="password_confirmation" class="form-control"
                     placeholder="Confirm password" required>
+                <span class="input-group-text" id="toggleConfirmPassword" style="cursor:pointer;">
+                    <i class="fa fa-eye"></i>
+                </span>
 
             </div>
 

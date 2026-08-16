@@ -13,39 +13,17 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $this->authorize('viewAny', Course::class);
-    //     $course = Course::with('department')->paginate(10);
-
-    //     return view('courses.allCourses', compact('course'));
-    // }
 
     public function index(Request $request)
     {
         $this->authorize('viewAny', Course::class);
 
-        $course = Course::with('department');
+        $courses = Course::with('department')
+            ->search($request->search)
+            ->paginate(10)
+            ->withQueryString();
 
-        if ($request->filled('search')) {
-
-            $search = $request->search;
-
-            $course->where(function ($query) use ($search) {
-
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('code', 'like', "%{$search}%")
-                    ->orWhere('semester', 'like', "%{$search}%")
-                    ->orWhereHas('department', function ($q) use ($search) {
-
-                        $q->where('name', 'like', "%{$search}%");
-                    });
-            });
-        }
-
-        $course = $course->paginate(10)->withQueryString();
-
-        return view('courses.allCourses', compact('course'));
+        return view('courses.allCourses', compact('courses'));
     }
 
     /**

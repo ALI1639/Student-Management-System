@@ -13,14 +13,6 @@ class TeacherController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $this->authorize('viewAny', Teacher::class);
-    //     $teachers = Teacher::with('department')->paginate(10);
-    //     // return ($teacher);
-
-    //     return view('teachers.allTeachers', compact('teachers'));
-    // }
 
     public function index(Request $request)
     {

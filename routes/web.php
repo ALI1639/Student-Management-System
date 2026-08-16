@@ -55,6 +55,24 @@ Route::post(
 
 
 
+// forget Password
+
+
+
+Route::get(
+    '/forgot-password',
+    [AdminPasswordController::class, 'index']
+)->name('forget.password');
+
+
+Route::post(
+    '/forgot-password',
+    [AdminPasswordController::class, 'update']
+)->name('password.update');
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Admin Panel Routes
@@ -207,28 +225,6 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
         [ProfileController::class, 'update']
     )->name('profile.update');
 
-
-
-
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Password
-    |--------------------------------------------------------------------------
-    */
-
-
-    Route::get(
-        '/forgot-password',
-        [AdminPasswordController::class, 'index']
-    )->name('admin.password');
-
-
-    Route::post(
-        '/forgot-password',
-        [AdminPasswordController::class, 'update']
-    )->name('admin.password.update');
 
 
 

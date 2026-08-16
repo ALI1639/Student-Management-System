@@ -309,6 +309,76 @@
             }
         }
 
+        /* ==========================
+   MOBILE SIDEBAR CLOSE BUTTON
+========================== */
+
+        .sidebar-close-btn {
+            display: none;
+        }
+
+
+        /* ==========================
+   MOBILE SIDEBAR
+========================== */
+
+        @media (max-width: 992px) {
+
+            .sidebar {
+                height: 100dvh;
+                max-height: 100dvh;
+
+                overflow-y: auto;
+                overflow-x: hidden;
+
+                -webkit-overflow-scrolling: touch;
+
+                touch-action: pan-y;
+
+                overscroll-behavior: contain;
+
+                scrollbar-width: thin;
+            }
+
+            .sidebar-close-btn {
+                display: flex;
+
+                position: absolute;
+                top: 15px;
+                right: 12px;
+
+                width: 38px;
+                height: 38px;
+
+                align-items: center;
+                justify-content: center;
+
+                border: none;
+                border-radius: 50%;
+
+                background: rgba(255, 255, 255, 0.12);
+                color: #fff;
+
+                font-size: 18px;
+
+                cursor: pointer;
+
+                z-index: 1005;
+
+                transition: all .25s ease;
+            }
+
+            .sidebar-close-btn:hover {
+                background: #dc3545;
+                color: #fff;
+                transform: rotate(90deg);
+            }
+
+            .sidebar.active {
+                margin-left: 0;
+            }
+        }
+
 
 
         /* ==========================
@@ -979,7 +1049,6 @@
 
     <div class="sidebar" id="sidebar">
         <a href="{{ route('dashboard') }}" class="sidebar-logo-brand">
-
             <div class="sidebar-logo-image">
                 @if (isset($setting) && $setting->logo)
                     <img src="{{ asset($setting->logo) }}" alt="Logo">
@@ -987,33 +1056,28 @@
                     <i class="bi bi-mortarboard-fill"></i>
                 @endif
             </div>
-
             @php
                 $siteName = $setting->site_name ?? 'Student Management System';
-
                 $words = explode(' ', trim($siteName));
-
                 $firstWord = array_shift($words);
-
                 $remainingWords = implode(' ', $words);
             @endphp
 
             <div class="sidebar-logo-name">
-
                 <div class="logo-student">
                     {{ $firstWord }}
                 </div>
-
                 <div class="logo-management">
                     {{ $remainingWords }}
                 </div>
-
             </div>
-
         </a>
 
-        <ul class="sidebar-menu">
+        <button type="button" class="sidebar-close-btn" id="sidebar-close">
+            <i class="bi bi-x-lg"></i>
+        </button>
 
+        <ul class="sidebar-menu">
             <li>
 
                 <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -1131,16 +1195,8 @@
             @endif
 
 
-            {{-- <li>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button class="w-100 border-0 bg-transparent text-start text-light px-3 py-3 rounded"
-                        style="transition:.3s;">
-                        <i class="bi bi-box-arrow-right me-2"></i>
-                        Logout
-                    </button>
-                </form>
-            </li> --}}
+
+
 
             <li style="border-top: 1px solid rgba(255,255,255,0.15); margin-top: 8px; padding-top: 8px;">
                 <form action="{{ route('logout') }}" method="POST">
@@ -1467,44 +1523,74 @@
 
     <script>
         const sidebar = document.getElementById("sidebar");
-
         const menuBtn = document.getElementById("menu-btn");
+        const closeBtn = document.getElementById("sidebar-close");
+        const sidebarOverlay = document.getElementById("sidebar-overlay");
 
+        // Open / Toggle Sidebar
         menuBtn.addEventListener("click", function() {
 
             if (window.innerWidth <= 992) {
 
-                sidebar.classList.toggle("active");
+                sidebar.classList.add("active");
+                sidebarOverlay.classList.add("active");
 
             } else {
 
                 if (sidebar.style.width == "80px") {
 
                     sidebar.style.width = "270px";
-
                     document.querySelector(".main").style.marginLeft = "270px";
 
                     document.querySelectorAll(".sidebar-menu a").forEach(function(item) {
-
                         item.style.justifyContent = "start";
-
                     });
 
                 } else {
 
                     sidebar.style.width = "80px";
-
                     document.querySelector(".main").style.marginLeft = "80px";
 
                     document.querySelectorAll(".sidebar-menu a").forEach(function(item) {
-
                         item.style.justifyContent = "center";
-
                     });
 
                 }
-
             }
+        });
+
+
+        // Close Sidebar
+        closeBtn.addEventListener("click", function() {
+
+            sidebar.classList.remove("active");
+            sidebarOverlay.classList.remove("active");
+
+        });
+
+
+        // Close Sidebar when clicking outside
+        sidebarOverlay.addEventListener("click", function() {
+
+            sidebar.classList.remove("active");
+            sidebarOverlay.classList.remove("active");
+
+        });
+
+
+        // Close Sidebar after clicking a menu link on mobile
+        document.querySelectorAll(".sidebar-menu a").forEach(function(link) {
+
+            link.addEventListener("click", function() {
+
+                if (window.innerWidth <= 992) {
+
+                    sidebar.classList.remove("active");
+                    sidebarOverlay.classList.remove("active");
+
+                }
+
+            });
 
         });
     </script>

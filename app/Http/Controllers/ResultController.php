@@ -18,6 +18,9 @@ class ResultController extends Controller
 
         $results = Result::with(['student', 'subject'])
             ->forStudent()
+            ->whereHas('subject', function ($query) {
+                $query->forTeacher();
+            })
             ->latest()
             ->paginate(10);
 

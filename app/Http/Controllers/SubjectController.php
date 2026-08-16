@@ -21,6 +21,7 @@ class SubjectController extends Controller
 
         $subjects = Subject::with(['teachers', 'department', 'course'])
             ->forStudent()
+            ->ForTeacher()
             ->search($request->search)
             ->paginate(10)
             ->withQueryString();

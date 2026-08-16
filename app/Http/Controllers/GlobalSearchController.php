@@ -21,17 +21,8 @@ class GlobalSearchController extends Controller
             ]);
         }
 
-        // ============================
         // Students
-        // ============================
-
-        $student = Student::where('name', 'like', "%{$search}%")
-            ->orWhere('roll_number', 'like', "%{$search}%")
-            ->orWhere('email', 'like', "%{$search}%")
-            ->first();
-
-        if ($student) {
-
+        if (Student::search($search)->exists()) {
             return response()->json([
                 'status' => true,
                 'url' => route('students.index', [
@@ -40,16 +31,8 @@ class GlobalSearchController extends Controller
             ]);
         }
 
-        // ============================
         // Teachers
-        // ============================
-
-        $teacher = Teacher::where('name', 'like', "%{$search}%")
-            ->orWhere('email', 'like', "%{$search}%")
-            ->first();
-
-        if ($teacher) {
-
+        if (Teacher::search($search)->exists()) {
             return response()->json([
                 'status' => true,
                 'url' => route('teachers.index', [
@@ -58,16 +41,8 @@ class GlobalSearchController extends Controller
             ]);
         }
 
-        // ============================
         // Departments
-        // ============================
-
-        $department = Department::where('name', 'like', "%{$search}%")
-            ->orWhere('code', 'like', "%{$search}%")
-            ->first();
-
-        if ($department) {
-
+        if (Department::search($search)->exists()) {
             return response()->json([
                 'status' => true,
                 'url' => route('departments.index', [
@@ -76,16 +51,8 @@ class GlobalSearchController extends Controller
             ]);
         }
 
-        // ============================
         // Courses
-        // ============================
-
-        $course = Course::where('name', 'like', "%{$search}%")
-            ->orWhere('code', 'like', "%{$search}%")
-            ->first();
-
-        if ($course) {
-
+        if (Course::search($search)->exists()) {
             return response()->json([
                 'status' => true,
                 'url' => route('courses.index', [
@@ -94,16 +61,8 @@ class GlobalSearchController extends Controller
             ]);
         }
 
-        // ============================
         // Subjects
-        // ============================
-
-        $subject = Subject::where('name', 'like', "%{$search}%")
-            ->orWhere('code', 'like', "%{$search}%")
-            ->first();
-
-        if ($subject) {
-
+        if (Subject::search($search)->exists()) {
             return response()->json([
                 'status' => true,
                 'url' => route('subjects.index', [
@@ -111,10 +70,6 @@ class GlobalSearchController extends Controller
                 ])
             ]);
         }
-
-        // ============================
-        // No Record
-        // ============================
 
         return response()->json([
             'status' => false

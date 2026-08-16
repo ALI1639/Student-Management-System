@@ -36,43 +36,47 @@ class Subject extends Model
             return $query;
         }
 
-        return $query->where(function ($q) use ($search) {
+        return $query->where(function ($query) use ($search) {
 
-            $q->where('name', 'like', "%{$search}%")
+            $query->where('name', 'like', "%{$search}%")
                 ->orWhere('code', 'like', "%{$search}%")
-                ->orWhere('semester', 'like', "%{$search}%")
-                ->orWhereHas('department', function ($department) use ($search) {
-                    $department->where('name', 'like', "%{$search}%");
+
+                ->orWhereHas('department', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
                 })
-                ->orWhereHas('course', function ($course) use ($search) {
-                    $course->where('name', 'like', "%{$search}%");
-                })
-                ->orWhereHas('teachers', function ($teacher) use ($search) {
-                    $teacher->where('name', 'like', "%{$search}%");
+
+                ->orWhereHas('course', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
                 });
         });
     }
+
 
     public function scopeForTeacher($query)
     {
         $user = auth()->user();
 
+        // Admin / other roles -> all subjects
         if (!$user || strtolower($user->role) !== 'teacher') {
             return $query;
         }
 
+        // Find teacher record using logged-in user's email
         $teacher = Teacher::where('email', $user->email)->first();
 
+        // Teacher record not found
         if (!$teacher) {
             return $query->whereRaw('1 = 0');
         }
 
-        return $query
-            ->whereHas('teachers', function ($q) use ($teacher) {
-                $q->where('teachers.id', $teacher->id);
-            })
-            ->with('attendances');
+        // Only subjects assigned to this teacher
+        return $query->whereHas('teachers', function ($q) use ($teacher) {
+            $q->where('teachers.id', $teacher->id);
+        });
     }
+
+
+
 
 
 

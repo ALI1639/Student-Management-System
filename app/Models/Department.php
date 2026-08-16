@@ -14,6 +14,20 @@ class Department extends Model
 
     protected $guarded = [];
 
+
+    public function scopeSearch($query, $search)
+    {
+        if (!$search) {
+            return $query;
+        }
+
+        return $query->where(function ($query) use ($search) {
+
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('code', 'like', "%{$search}%");
+        });
+    }
+
     public function course()
     {
         return $this->hasMany(Course::class);

@@ -16,16 +16,34 @@ class AttendanceController extends Controller
     /**
      * Display Attendance List
      */
-    public function index()
+    // public function index()
+    // {
+    //     $this->authorize('create', Attendance::class);
+    //     $attendances = Attendance::with([
+    //         'student',
+    //         'department',
+    //         'subject'
+    //     ])
+    //         ->orderBy('attendance_date', 'desc')
+    //         ->paginate(10);
+
+    //     return view('attendances.index', compact('attendances'));
+    // }
+
+    public function index(Request $request)
     {
-        $this->authorize('create', Attendance::class);
+        $this->authorize('viewAny', Attendance::class);
+
         $attendances = Attendance::with([
             'student',
-            'department',
             'subject'
         ])
-            ->orderBy('attendance_date', 'desc')
-            ->paginate(10);
+            ->whereHas('subject', function ($query) {
+                $query->forTeacher();
+            })
+            ->latest('attendance_date')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('attendances.index', compact('attendances'));
     }

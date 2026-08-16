@@ -11,45 +11,19 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    // public function index()
-    // {
-    //     $this->authorize('viewAny', Student::class);
-    //     $students = Student::with('department')->with('course')->paginate(10);
-    //     // return ($student);
 
-    //     return view('students.allStudents', compact('students'));
-    // }
     public function index(Request $request)
     {
         $this->authorize('viewAny', Student::class);
 
-        $students = Student::with(['department', 'course']);
-
-        if ($request->filled('search')) {
-
-            $search = $request->search;
-
-            $students->where(function ($query) use ($search) {
-
-                $query->where('roll_number', 'like', "%{$search}%")
-                    ->orWhere('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhereHas('department', function ($q) use ($search) {
-                        $q->where('name', 'like', "%{$search}%");
-                    })
-                    ->orWhereHas('course', function ($q) use ($search) {
-                        $q->where('name', 'like', "%{$search}%");
-                    });
-            });
-        }
-
-        $students = $students->paginate(10)->withQueryString();
+        $students = Student::with(['department', 'course'])
+            ->search($request->search)
+            ->paginate(10)
+            ->withQueryString();
 
         return view('students.allStudents', compact('students'));
     }
+
 
     /**
      * Show the form for creating a new resource.

@@ -101,7 +101,7 @@
 
         <div class="d-flex justify-content-end mb-3">
 
-            <a href="{{ route('admin.password') }}" class="text-decoration-none">
+            <a href="{{ route('forget.password') }}" class="text-decoration-none">
 
                 <i class="fa fa-key me-1"></i>
 

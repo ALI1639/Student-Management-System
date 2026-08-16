@@ -14,35 +14,15 @@ class DepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $this->authorize('viewAny', Department::class);
-
-    //     $depart = Department::paginate(10);
-
-    //     return view('departments.alldeparts', compact('depart'));
-    // }
-
     public function index(Request $request)
     {
         $this->authorize('viewAny', Department::class);
 
-        $depart = Department::query();
+        $departments = Department::search($request->search)
+            ->paginate(10)
+            ->withQueryString();
 
-        if ($request->filled('search')) {
-
-            $search = $request->search;
-
-            $depart->where(function ($query) use ($search) {
-
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('code', 'like', "%{$search}%");
-            });
-        }
-
-        $depart = $depart->paginate(10)->withQueryString();
-
-        return view('departments.alldeparts', compact('depart'));
+        return view('departments.allDepartments', compact('departments'));
     }
 
     /**

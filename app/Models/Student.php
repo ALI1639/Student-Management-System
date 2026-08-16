@@ -13,6 +13,29 @@ class Student extends Model
 
     protected $guarded = [];
 
+    public function scopeSearch($query, $search)
+    {
+        if (!$search) {
+            return $query;
+        }
+
+        return $query->where(function ($query) use ($search) {
+
+            $query->where('roll_number', 'like', "%{$search}%")
+                ->orWhere('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%")
+
+                ->orWhereHas('department', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })
+
+                ->orWhereHas('course', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                });
+        });
+    }
+
     public function department()
     {
         return $this->belongsTo(Department::class);

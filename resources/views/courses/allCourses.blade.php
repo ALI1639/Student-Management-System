@@ -37,7 +37,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($course as $c)
+                @foreach ($courses as $c)
                     <tr>
                         <td>{{ $c->id }}</td>
                         <td>{{ $c->name }}</td>
@@ -89,7 +89,7 @@
             </tbody>
         </table>
         <div class="mt-3">
-            {{ $course->links('pagination::bootstrap-5') }}
+            {{ $courses->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection

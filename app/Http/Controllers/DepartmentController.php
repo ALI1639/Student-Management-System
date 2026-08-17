@@ -18,11 +18,11 @@ class DepartmentController extends Controller
     {
         $this->authorize('viewAny', Department::class);
 
-        $departments = Department::search($request->search)
+        $depart = Department::search($request->search)
             ->paginate(10)
             ->withQueryString();
 
-        return view('departments.allDepartments', compact('departments'));
+        return view('departments.alldeparts', compact('depart'));
     }
 
     /**
